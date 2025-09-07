@@ -1,0 +1,11 @@
+DiseaseID,DiseaseName,Description,RelatedGenes
+D1,Breast Cancer,A malignant tumor in breast tissue.,"['G1', 'G2']"
+D2,Lung Cancer,Uncontrolled growth of abnormal lung cells.,"['G2', 'G3', 'G4']"
+D3,Cystic Fibrosis,A genetic disorder affecting the lungs and digestive system.,['G5']
+D4,Alzheimer's Disease,A progressive neurodegenerative disorder.,['G6']
+D5,Huntington's Disease,A genetic disorder causing brain degeneration.,['G7']
+D6,Type 2 Diabetes,A chronic condition affecting insulin use.,['G8']
+D7,Colorectal Cancer,Cancer that starts in the colon or rectum.,"['G2', 'G4']"
+D8,Glioblastoma,An aggressive brain cancer.,"['G9', 'G2']"
+D9,Macular Degeneration,A disease that blurs central vision.,['G10']
+D10,Ovarian Cancer,Cancer that begins in the ovaries.,"['G1', 'G2']"

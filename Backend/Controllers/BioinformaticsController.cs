@@ -1,0 +1,210 @@
+﻿using Azure;
+using Backend.Models;
+using Backend.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Backend.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class BioinformaticsController : ControllerBase
+    {
+        private readonly IBioinformaticsService _bioinformaticsService;
+        private readonly IElasticService _elasticService;   
+        private readonly ILogger<BioinformaticsController> _logger;
+
+        public BioinformaticsController(IBioinformaticsService bioinformaticsService, IElasticService elasticService, ILogger<BioinformaticsController> logger)
+        {
+            _bioinformaticsService = bioinformaticsService;
+            _elasticService = elasticService;
+            _logger = logger;
+        }
+
+        [HttpGet("diseases")]
+        public async Task<ActionResult<IEnumerable<Disease>>> GetAllDiseases()
+        {
+            try
+            {
+                var diseases = await _bioinformaticsService.GetAllDiseasesAsync();
+                return Ok(diseases);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving all diseases");
+                return StatusCode(500, "An error occurred while retrieving diseases");
+            }
+        }
+
+        [HttpGet("diseases/{diseaseId}")]
+        public async Task<ActionResult<Disease>> GetDiseaseById(string diseaseId)
+        {
+            try
+            {
+                var disease = await _bioinformaticsService.FindDiseaseAndRelatedGenesAsync(diseaseId);
+                if (disease == null)
+                {
+                    return NotFound($"Disease with ID {diseaseId} was not found.");
+                }
+                return Ok(disease);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving disease with ID {DiseaseId}", diseaseId);
+                return StatusCode(500, "An error occurred while retrieving the disease");
+            }
+        }
+
+        [HttpGet("genes")]
+        public async Task<ActionResult<IEnumerable<Gene>>> GetAllGenes()
+        {
+            try
+            {
+                var genes = await _bioinformaticsService.GetAllGenesAsync();
+                return Ok(genes);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving all genes");
+                return StatusCode(500, "An error occurred while retrieving genes");
+            }
+        }
+
+        [HttpGet("genes/{geneId}")]
+        public async Task<ActionResult<Gene>> GetGeneById(string geneId)
+        {
+            try
+            {
+                var gene = await _bioinformaticsService.FindGeneAndRelatedEntitiesAsync(geneId);
+                if (gene == null)
+                {
+                    return NotFound($"Gene with ID {geneId} was not found.");
+                }
+                return Ok(gene);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving gene with ID {GeneId}", geneId);
+                return StatusCode(500, "An error occurred while retrieving the gene");
+            }
+        }
+
+        [HttpGet("drugs")]
+        public async Task<ActionResult<IEnumerable<Drug>>> GetAllDrugs()
+        {
+            try
+            {
+                var drugs = await _bioinformaticsService.GetAllDrugsAsync();
+                return Ok(drugs);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving all drugs");
+                return StatusCode(500, "An error occurred while retrieving drugs");
+            }
+        }
+
+        [HttpGet("drugs/{drugId}")]
+        public async Task<ActionResult<Drug>> GetDrugById(string drugId)
+        {
+            try
+            {
+                var drug = await _bioinformaticsService.FindDrugAndRelatedEntitiesAsync(drugId);
+                if (drug == null)
+                {
+                    return NotFound($"Drug with ID {drugId} was not found.");
+                }
+                return Ok(drug);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving drug with ID {DrugId}", drugId);
+                return StatusCode(500, "An error occurred while retrieving the drug");
+            }
+        }
+
+        // Search endpoints
+        [HttpGet("search/diseases")]
+        public async Task<ActionResult<IEnumerable<Disease>>> SearchDiseases([FromQuery] string query)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(query))
+                {
+                    return BadRequest("Search query cannot be empty");
+                }
+
+                var diseases = await _bioinformaticsService.SearchDiseasesAsync(query);
+                return Ok(diseases);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error searching diseases with query {Query}", query);
+                return StatusCode(500, "An error occurred while searching diseases");
+            }
+        }
+
+        [HttpGet("search/genes")]
+        public async Task<ActionResult<IEnumerable<Gene>>> SearchGenes([FromQuery] string query)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(query))
+                {
+                    return BadRequest("Search query cannot be empty");
+                }
+
+                var genes = await _bioinformaticsService.SearchGenesAsync(query);
+                return Ok(genes);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error searching genes with query {Query}", query);
+                return StatusCode(500, "An error occurred while searching genes");
+            }
+        }
+
+        [HttpGet("search/drugs")]
+        public async Task<ActionResult<IEnumerable<Drug>>> SearchDrugs([FromQuery] string query)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(query))
+                {
+                    return BadRequest("Search query cannot be empty");
+                }
+
+                var drugs = await _bioinformaticsService.SearchDrugsAsync(query);
+              
+                return Ok(drugs);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error searching drugs with query {Query}", query);
+                return StatusCode(500, "An error occurred while searching drugs");
+            }
+        }
+
+
+        [HttpGet("elasticsearch/diseases")]
+        public async Task<IActionResult> Search([FromQuery] string query)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(query))
+                {
+                    return BadRequest("Search query cannot be empty");
+                }
+
+                var diseases = await _elasticService.ElasticSearchDiseasesAsync(query);
+              
+                return Ok(diseases);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error searching diseases with query {Query}", query);
+                return StatusCode(500, "An error occurred while searching drugs");
+            }
+        }
+    }
+}
+
