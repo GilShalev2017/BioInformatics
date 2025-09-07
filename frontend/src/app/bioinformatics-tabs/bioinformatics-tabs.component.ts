@@ -4,6 +4,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { BioImportComponent } from '../bio-import/bio-import.component';
 import { GeneTableComponent } from "../gene-table/gene-table.component";
 import { DrugTableComponent } from '../drug-table/drug-table.component';
+import { RelationshipsGraphComponent } from '../relationships/relationships.component';
 
 @Component({
   selector: 'app-bioinformatics-tabs',
@@ -15,7 +16,8 @@ import { DrugTableComponent } from '../drug-table/drug-table.component';
     DiseaseTableComponent,
     BioImportComponent,
     GeneTableComponent,
-    DrugTableComponent
+    DrugTableComponent,
+    RelationshipsGraphComponent
 ]
 })
 export class BioinformaticsTabsComponent implements OnInit {

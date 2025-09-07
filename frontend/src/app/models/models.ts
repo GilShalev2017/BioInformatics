@@ -14,7 +14,6 @@ export interface Disease {
     DiseaseName: string,
     Description: string,
     RelatedGenes: Gene[]
-
 }
 
 export interface Drug {
@@ -22,5 +21,10 @@ export interface Drug {
     DrugId: string,
     DrugName: string,
     TargetedGenes: Gene[]
+}
 
+export interface Relationships {
+    Genes: Gene[];
+    Diseases: Disease[];
+    Drugs: Drug[];
 }

@@ -22,6 +22,9 @@ namespace Backend.Services
         Task<Drug?> FindDrugAndRelatedEntitiesAsync(string drugId);
         Task<IEnumerable<Drug>> GetAllDrugsAsync();
         Task<IEnumerable<Drug>> SearchDrugsAsync(string query);
+
+        //Relationships
+        Task<Relationships> GetRelationships();
     }
     public class BioinformaticsService : IBioinformaticsService
     {
@@ -168,5 +171,27 @@ namespace Backend.Services
 
         #endregion
 
+        #region Relationships
+        public async Task<Relationships> GetRelationships()
+        {
+            var genes = await _bioDbContext.Genes
+              .Include(g => g.RelatedDiseases)
+              .Include(g => g.TargetedByDrugs)
+              .ToListAsync();
+
+            var diseases = await _bioDbContext.Diseases
+                .Include(d => d.RelatedGenes)
+                .ToListAsync();
+
+            var drugs = await _bioDbContext.Drugs
+                .Include(dr => dr.TargetGenes)
+                .ToListAsync();
+
+            var relationships = new Relationships { Genes = genes, Diseases = diseases, Drugs = drugs };
+            
+            return relationships;
+        }
+
+        #endregion
     }
 }

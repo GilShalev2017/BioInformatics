@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { Disease, Drug, Gene } from '../models/models';
+import { Disease, Drug, Gene, Relationships } from '../models/models';
 
 @Injectable({
   providedIn: 'root'
@@ -92,6 +92,13 @@ export class BioService {
       );
   }
 
+  getRelationships(): Observable<Relationships> {
+    return this.http.get<Relationships>(
+      `${this.baseBioApi}/relationships`
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
   // Private method to handle HTTP errors
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred';
@@ -133,13 +140,13 @@ export class BioService {
   }
 }
 
-  // bioinformatics.service.ts
-  // getDiseasesPaged(pageIndex: number, pageSize: number, searchQuery: string = ''): Observable<any> {
-  //   return this.http.get<any>(`${this.baseBioApi}/diseases/paged`, {
-  //     params: {
-  //       pageNumber: (pageIndex + 1).toString(), // Angular paginator is 0-based
-  //       pageSize: pageSize.toString(),
-  //       searchQuery: searchQuery
-  //     }
-  //   });
-  // }
+// bioinformatics.service.ts
+// getDiseasesPaged(pageIndex: number, pageSize: number, searchQuery: string = ''): Observable<any> {
+//   return this.http.get<any>(`${this.baseBioApi}/diseases/paged`, {
+//     params: {
+//       pageNumber: (pageIndex + 1).toString(), // Angular paginator is 0-based
+//       pageSize: pageSize.toString(),
+//       searchQuery: searchQuery
+//     }
+//   });
+// }

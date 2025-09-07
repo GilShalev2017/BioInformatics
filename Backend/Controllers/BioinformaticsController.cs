@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Backend.Data;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ namespace Backend.Controllers
     public class BioinformaticsController : ControllerBase
     {
         private readonly IBioinformaticsService _bioinformaticsService;
-        private readonly IElasticService _elasticService;   
+        private readonly IElasticService _elasticService;
         private readonly ILogger<BioinformaticsController> _logger;
 
         public BioinformaticsController(IBioinformaticsService bioinformaticsService, IElasticService elasticService, ILogger<BioinformaticsController> logger)
@@ -196,7 +197,7 @@ namespace Backend.Controllers
                 }
 
                 var drugs = await _bioinformaticsService.SearchDrugsAsync(query);
-              
+
                 return Ok(drugs);
             }
             catch (Exception ex)
@@ -218,13 +219,29 @@ namespace Backend.Controllers
                 }
 
                 var diseases = await _elasticService.ElasticSearchDiseasesAsync(query);
-              
+
                 return Ok(diseases);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error searching diseases with query {Query}", query);
                 return StatusCode(500, "An error occurred while searching drugs");
+            }
+        }
+
+        [HttpGet("relationships")]
+        public async Task<IActionResult> GetRelationships()
+        {
+            try
+            {
+                var relationships = await _bioinformaticsService.GetRelationships();
+
+                return Ok(relationships);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting relationships}");
+                return StatusCode(500, "An error occurred while getting relationships");
             }
         }
     }
