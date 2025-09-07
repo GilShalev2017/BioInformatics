@@ -1,0 +1,346 @@
+// Variables
+$primary-color: #2563eb;
+$secondary-color: #64748b;
+$success-color: #059669;
+$background-color: #f8fafc;
+$white: #ffffff;
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-800: #1f2937;
+$gray-900: #111827;
+
+$border-radius: 8px;
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+$transition: all 0.2s ease-in-out;
+
+.bioinformatics-container {
+  min-height: 100vh;
+  background-color: $background-color;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  padding: 20px 20px 20px 20px;
+  // Header Section
+  .header {
+    background: linear-gradient(135deg, $primary-color 0%, #3b82f6 100%);
+    padding: 2rem 2rem 1.5rem;
+    color: $white;
+    box-shadow: $shadow-md;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+      
+      .action-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: $border-radius;
+        font-weight: 600;
+        cursor: pointer;
+        transition: $transition;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        
+        &.primary {
+          background-color: $white;
+          color: $primary-color;
+          
+          &:hover {
+            background-color: $gray-100;
+            transform: translateY(-1px);
+            box-shadow: $shadow-sm;
+          }
+        }
+        
+        &.secondary {
+          background-color: transparent;
+          color: $white;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+          }
+        }
+      }
+    }
+  }
+  
+  // Tab Navigation
+  .tab-navigation {
+    background-color: $white;
+    box-shadow: $shadow-sm;
+    position: relative;
+    border-bottom: 1px solid $gray-200;
+    
+    .tab-container {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    
+    .tab-button {
+      background: none;
+      border: none;
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: $gray-600;
+      transition: $transition;
+      position: relative;
+      white-space: nowrap;
+      border-bottom: 3px solid transparent;
+      
+      .tab-icon {
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+      }
+      
+      .tab-label {
+        font-weight: 600;
+      }
+      
+      .tab-count {
+        background-color: $gray-200;
+        color: $gray-600;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        min-width: 1.5rem;
+        text-align: center;
+      }
+      
+      &:hover:not(.active) {
+        color: $gray-800;
+        background-color: $gray-50;
+        
+        .tab-count {
+          background-color: $gray-300;
+          color: $gray-700;
+        }
+      }
+      
+      &.active {
+        color: $primary-color;
+        border-bottom-color: $primary-color;
+        background-color: rgba($primary-color, 0.05);
+        
+        .tab-count {
+          background-color: $primary-color;
+          color: $white;
+        }
+      }
+    }
+    
+    .tab-indicator {
+      position: absolute;
+      bottom: 0;
+      height: 3px;
+      background: linear-gradient(90deg, $primary-color, #3b82f6);
+      transition: $transition;
+      border-radius: 2px 2px 0 0;
+    }
+  }
+  
+  // Tab Content
+  .tab-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 60vh;
+    
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+      
+      &.active {
+        display: block;
+      }
+      
+      .tab-panel-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid $gray-200;
+        
+        h2 {
+          margin: 0 0 0.5rem 0;
+          color: $gray-900;
+          font-size: 1.75rem;
+          font-weight: 700;
+        }
+        
+        .tab-description {
+          margin: 0;
+          color: $gray-600;
+          font-size: 1rem;
+        }
+      }
+      
+      .content-placeholder {
+        background-color: $white;
+        border-radius: $border-radius;
+        box-shadow: $shadow-sm;
+        border: 1px solid $gray-200;
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        .placeholder-content {
+          text-align: center;
+          padding: 2rem;
+          
+          .placeholder-icon {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+          }
+          
+          h3 {
+            margin: 0 0 0.5rem 0;
+            color: $gray-700;
+            font-size: 1.25rem;
+            font-weight: 600;
+          }
+          
+          p {
+            margin: 0;
+            color: $gray-500;
+            font-size: 0.95rem;
+          }
+        }
+      }
+    }
+  }
+  
+  // Status Bar
+  .status-bar {
+    background-color: $gray-100;
+    border-top: 1px solid $gray-200;
+    padding: 0.75rem 2rem;
+    
+    .status-info {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 2rem;
+      font-size: 0.875rem;
+      
+      .status-item {
+        color: $gray-600;
+        
+        strong {
+          color: $gray-800;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .bioinformatics-container {
+    .header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+    
+    .tab-navigation {
+      .tab-container {
+        padding: 0 1rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+      
+      .tab-button {
+        padding: 1rem;
+        flex-shrink: 0;
+        
+        .tab-label {
+          display: none;
+        }
+      }
+    }
+    
+    .tab-content {
+      padding: 1rem;
+    }
+    
+    .status-bar {
+      padding: 0.75rem 1rem;
+      
+      .status-info {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .bioinformatics-container {
+    .tab-navigation {
+      .tab-button {
+        .tab-count {
+          display: none;
+        }
+      }
+    }
+  }
+}
