@@ -6,13 +6,20 @@
     <input matInput placeholder="ID, name, or description..." [value]="searchTerm" (input)="onSearchChange($event)">
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="search-field">
+  <!-- For Paging -->
+  <!-- <mat-form-field>
+    <mat-label>Search</mat-label>
+    <input matInput (keyup)="onPagedSearchChange($event)">
+  </mat-form-field> -->
+
+  <!-- For ElasticSearch -->
+  <!-- <mat-form-field appearance="outline" class="search-field">
     <mat-label>Search diseases</mat-label>
     <input matInput placeholder="DiseaseID, DiseaseID, description..." [(ngModel)]="searchTerm">
     <button mat-icon-button matSuffix (click)="elasticSearch()">
       <mat-icon>search</mat-icon>
     </button>
-  </mat-form-field>
+  </mat-form-field> -->
 
   <!-- Loading state -->
   <div *ngIf="isLoading" class="loading-state">
@@ -63,6 +70,8 @@
 
     <!-- Paginator -->
     <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+    <!-- <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons (page)="onPageChange()">
+    </mat-paginator> -->
   </div>
 
   <!-- Detail panel -->

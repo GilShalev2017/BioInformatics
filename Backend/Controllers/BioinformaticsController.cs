@@ -54,6 +54,28 @@ namespace Backend.Controllers
             }
         }
 
+        [HttpGet("diseases/paged")]
+        public async Task<IActionResult> GetDiseasesPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? searchQuery = null)
+        {
+            try
+            {
+                var (items, totalCount) = await _bioinformaticsService.GetDiseasesPagedAsync(pageNumber, pageSize, searchQuery);
+
+                return Ok(new
+                {
+                    Items = items,
+                    TotalCount = totalCount,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving paged diseases");
+                return StatusCode(500, "An error occurred while retrieving diseases");
+            }
+        }
+
         [HttpGet("genes")]
         public async Task<ActionResult<IEnumerable<Gene>>> GetAllGenes()
         {

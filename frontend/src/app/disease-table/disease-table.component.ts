@@ -30,7 +30,7 @@ import { FormsModule } from '@angular/forms';
     MatButtonModule,
     MatCardModule,
     MatProgressSpinnerModule,
-    MatIcon,
+    // MatIcon,
     [FormsModule]
   ]
 })
@@ -51,17 +51,17 @@ export class DiseaseTableComponent implements OnInit, AfterViewInit {
     if (sort) this.dataSource.sort = sort;
   }
 
+  totalCount = 0;
+  pageSize = 10;
+
   constructor(private bioService: BioService) { }
 
   ngOnInit(): void {
     this.loadDiseases();
+    //this.loadPagedDiseases();
   }
 
   ngAfterViewInit(): void {
-    // Attach paginator/sort once
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource.sort = this.sort;
-
     // Define filter predicate once
     this.dataSource.filterPredicate = (data: Disease, filter: string) =>
       data.DiseaseID.toLowerCase().includes(filter) ||
@@ -101,10 +101,29 @@ export class DiseaseTableComponent implements OnInit, AfterViewInit {
   }
 
   elasticSearch() {
-    if (!this.searchTerm) 
+    if (!this.searchTerm)
       return;
 
     this.bioService.elasticSearchDiseases(this.searchTerm)
       .subscribe(result => this.dataSource.data = result);
   }
+
+  // loadPagedDiseases() {
+  //   this.bioService.getDiseasesPaged(this.dataSource.paginator?.pageIndex ?? 0, this.pageSize, this.searchTerm)
+  //     .subscribe(pagedDiseases => {
+  //       this.dataSource.data = pagedDiseases.Items;
+  //       this.totalCount = pagedDiseases.TotalCount;
+  //     });
+  // }
+
+  // onPagedSearchChange(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   this.searchTerm = input.value.trim().toLowerCase();
+  //   //this.dataSource.paginator?.pageIndex = 0; // reset to first page
+  //   this.loadPagedDiseases();
+  // }
+
+  // onPageChange() {
+  //   this.loadPagedDiseases();
+  // }
 }

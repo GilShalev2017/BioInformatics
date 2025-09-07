@@ -79,7 +79,7 @@ export class BioService {
   }
 
   importBioData(): Observable<any> {
-    return this.http.post(`https://localhost:7025/api/ImportBioData/import`,{})
+    return this.http.post(`${this.importApi}/import`, {})
       .pipe(
         catchError(this.handleError)
       );
@@ -132,3 +132,14 @@ export class BioService {
     return throwError(() => new Error(errorMessage));
   }
 }
+
+  // bioinformatics.service.ts
+  // getDiseasesPaged(pageIndex: number, pageSize: number, searchQuery: string = ''): Observable<any> {
+  //   return this.http.get<any>(`${this.baseBioApi}/diseases/paged`, {
+  //     params: {
+  //       pageNumber: (pageIndex + 1).toString(), // Angular paginator is 0-based
+  //       pageSize: pageSize.toString(),
+  //       searchQuery: searchQuery
+  //     }
+  //   });
+  // }

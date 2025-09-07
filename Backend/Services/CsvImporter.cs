@@ -43,7 +43,7 @@ namespace Backend.Services
                 await ImportDiseasesAsync(diseasesFilePath);
                 await ImportDrugsAsync(drugsFilePath);
 
-                await _elasticService.IndexDiseasesAsync(_bioDbContextcontext.Diseases);
+                //await _elasticService.IndexDiseasesAsync(_bioDbContextcontext.Diseases);
             }
             catch (Exception ex)
             {

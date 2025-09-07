@@ -11,6 +11,7 @@ namespace Backend.Services
         Task<Disease?> FindDiseaseAndRelatedGenesAsync(string diseaseId);
         Task<IEnumerable<Disease>> GetAllDiseasesAsync();
         Task<IEnumerable<Disease>> SearchDiseasesAsync(string query);
+        Task<(IEnumerable<Disease> Items, int TotalCount)> GetDiseasesPagedAsync(int pageNumber, int pageSize, string? searchQuery);
 
         // Gene methods
         Task<Gene?> FindGeneAndRelatedEntitiesAsync(string geneId);
@@ -66,6 +67,32 @@ namespace Backend.Services
 
             return diseases;
         }
+        public async Task<(IEnumerable<Disease> Items, int TotalCount)> GetDiseasesPagedAsync(int pageNumber, int pageSize, string? searchQuery)
+        {
+            var query = _bioDbContext.Diseases
+                .Include(d => d.RelatedGenes) // include the join data
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                query = query.Where(d =>
+                    d.DiseaseName.Contains(searchQuery) ||
+                    d.Description.Contains(searchQuery) ||
+                    d.RelatedGenes.Any(g => g.GeneName.Contains(searchQuery))
+                );
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(d => d.DiseaseName) // deterministic ordering
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
 
         #endregion
 
