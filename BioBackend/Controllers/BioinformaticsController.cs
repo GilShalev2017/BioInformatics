@@ -1,23 +1,18 @@
-﻿using Azure;
-using Backend.Data;
-using Backend.Models;
-using Backend.Services;
+﻿using BioBackend.Models;
+using BioBackend.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.Controllers
+namespace BioBackend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class BioinformaticsController : ControllerBase
+    public class BioinformaticsController : Controller
     {
         private readonly IBioinformaticsService _bioinformaticsService;
-        private readonly IElasticService _elasticService;
         private readonly ILogger<BioinformaticsController> _logger;
-
-        public BioinformaticsController(IBioinformaticsService bioinformaticsService, IElasticService elasticService, ILogger<BioinformaticsController> logger)
+        public BioinformaticsController(IBioinformaticsService bioinformaticsService, ILogger<BioinformaticsController> logger)
         {
             _bioinformaticsService = bioinformaticsService;
-            _elasticService = elasticService;
             _logger = logger;
         }
 
@@ -207,42 +202,39 @@ namespace Backend.Controllers
             }
         }
 
-        [HttpGet("elasticsearch/diseases")]
-        public async Task<IActionResult> Search([FromQuery] string query)
+
+
+        [HttpGet("diseases/{diseaseId}/genes")]
+        public async Task<ActionResult<IEnumerable<Gene>>> GetGenesForDisease(string diseaseId)
         {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(query))
-                {
-                    return BadRequest("Search query cannot be empty");
-                }
-
-                var diseases = await _elasticService.ElasticSearchDiseasesAsync(query);
-
-                return Ok(diseases);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error searching diseases with query {Query}", query);
-                return StatusCode(500, "An error occurred while searching diseases");
-            }
+            var genes = await _bioinformaticsService.GetGenesForDiseaseAsync(diseaseId);
+            if (!genes.Any()) return NotFound($"No genes found for disease {diseaseId}");
+            return Ok(genes);
         }
 
-        [HttpGet("relationships")]
-        public async Task<IActionResult> GetRelationships()
+        [HttpGet("genes/{geneId}/diseases")]
+        public async Task<ActionResult<IEnumerable<Disease>>> GetDiseasesForGene(string geneId)
         {
-            try
-            {
-                var relationships = await _bioinformaticsService.GetRelationships();
-
-                return Ok(relationships);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting relationships}");
-                return StatusCode(500, "An error occurred while getting relationships");
-            }
+            var diseases = await _bioinformaticsService.GetDiseasesForGeneAsync(geneId);
+            if (!diseases.Any()) return NotFound($"No diseases found for gene {geneId}");
+            return Ok(diseases);
         }
+
+        [HttpGet("genes/{geneId}/drugs")]
+        public async Task<ActionResult<IEnumerable<Drug>>> GetDrugsForGene(string geneId)
+        {
+            var drugs = await _bioinformaticsService.GetDrugsForGeneAsync(geneId);
+            if (!drugs.Any()) return NotFound($"No drugs found for gene {geneId}");
+            return Ok(drugs);
+        }
+
+        [HttpGet("drugs/{drugId}/genes")]
+        public async Task<ActionResult<IEnumerable<Gene>>> GetGenesForDrug(string drugId)
+        {
+            var genes = await _bioinformaticsService.GetGenesForDrugAsync(drugId);
+            if (!genes.Any()) return NotFound($"No genes found for drug {drugId}");
+            return Ok(genes);
+        }
+
     }
 }
-

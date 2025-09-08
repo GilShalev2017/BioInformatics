@@ -1,0 +1,12 @@
+gene_id,gene name
+G1,BRCA1
+G2,TP53
+G3,EGFR
+G4,KRAS
+G5,CFTR
+G5,CFTR        # duplicate
+,APOE          # missing ID
+G7,HTT
+G8,INSR
+G9,
+gene10,VEGFA   # mismatched ID style

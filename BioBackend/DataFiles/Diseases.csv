@@ -1,0 +1,12 @@
+disease_id,disease_name,desc,RelatedGenes
+D1,Breast Cancer,"A malignant tumor in breast tissue.","['G1','G2']"
+D2,Lung Cancer,"Uncontrolled growth of abnormal lung cells.","['G2','G3','G4']"
+D3,Cystic Fibrosis,"A genetic disorder affecting lungs.",['G5']
+D4,Alzheimer's Disease,"A neurodegenerative disorder.","['G6']"
+D5,Huntington's Disease,"Brain degeneration.","['G7']"
+D6,Type 2 Diabetes,"Affects insulin use.","['G8']"
+D7,Colorectal Cancer,"Starts in colon/rectum.","['G2','G4']"
+D8,Glioblastoma,"Aggressive brain cancer.","['G9','G2']"
+D9,Macular Degeneration,"Blurs central vision.","['G10']"
+D10,Ovarian Cancer,"Begins in ovaries.","['G1','G2']"
+BADROW,NoName,,[??]   # bad row (empty description, invalid gene list)

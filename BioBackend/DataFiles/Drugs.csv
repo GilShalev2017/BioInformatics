@@ -1,0 +1,12 @@
+drug_id,drug name,targetgenes
+DR1,Olaparib,"['G1']"
+DR2,Tamoxifen,"['G1','G2']"
+DR3,Gefitinib,"['G3']"
+DR4,Cetuximab,"['G3','G4']"
+DR5,Ivacaftor,"['G5']"
+DR6,Donepezil,"['G6']"
+DR7,Tetrabenazine,"['G7']"
+DR8,Metformin,"['G8']"
+DR9,Bevacizumab,"['G10']"
+DR10,Cisplatin,"['G2','G9']"
+DRX,FakeDrug,"[]"    # orphan drug

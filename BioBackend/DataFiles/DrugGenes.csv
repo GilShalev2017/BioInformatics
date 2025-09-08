@@ -1,0 +1,13 @@
+drug_id,gene_id,effect,approval_year
+DR1,G1,Inhibition,2014
+DR2,G1,Antagonist,1998
+DR2,G2,Inhibition,1998
+DR3,G3,Inhibition,2003
+DR4,G3,Antibody,2004
+DR4,G4,Antibody,2004
+DR5,G5,Potentiator,2012
+DR6,G6,Symptomatic,1996
+DR9,G10,Anti-VEGF,2004
+DR10,G2,Chemotherapy,1978
+DR10,G9,Chemotherapy,1978
+DRX,G999,Unknown,????   # bad row (invalid gene + bad year)

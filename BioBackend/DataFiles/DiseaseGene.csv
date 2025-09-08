@@ -1,0 +1,10 @@
+disease_id,gene_id,evidence_type,strength
+D1,G1,Clinical,0.95
+D1,G2,Experimental,0.80
+D2,G2,Clinical,0.90
+D2,G3,Computational,0.60
+D2,G4,Experimental,0.75
+D4,G6,Clinical,0.92
+D8,G9,Clinical,0.85
+D8,G2,Experimental,0.70
+BADROW,G100,FakeType,??   # bad row (invalid gene + bad number)

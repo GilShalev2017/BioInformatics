@@ -9,8 +9,13 @@ import { Disease, Drug, Gene, Relationships } from '../models/models';
   providedIn: 'root'
 })
 export class BioService {
-  private readonly baseBioApi = 'https://localhost:7025/api/Bioinformatics';
-  private readonly importApi = 'https://localhost:7025/api/ImportBioData';
+  // Against Backend
+  // private readonly baseBioApi = 'https://localhost:7025/api/Bioinformatics';
+  // private readonly importApi = 'https://localhost:7025/api/ImportBioData';
+  
+  //Against BioBackend
+  private readonly baseBioApi = 'https://localhost:7266/api/Bioinformatics';
+  private readonly importApi = 'https://localhost:7266/api/ImportBioData';
 
   constructor(private http: HttpClient) { }
 

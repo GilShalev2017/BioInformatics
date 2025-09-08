@@ -43,7 +43,7 @@ namespace Backend.Services
                 await ImportDiseasesAsync(diseasesFilePath);
                 await ImportDrugsAsync(drugsFilePath);
 
-                //await _elasticService.IndexDiseasesAsync(_bioDbContextcontext.Diseases);
+               // await _elasticService.IndexDiseasesAsync(_bioDbContextcontext.Diseases);
             }
             catch (Exception ex)
             {
@@ -51,8 +51,6 @@ namespace Backend.Services
                 throw; // rethrow so you still see it in ASP.NET logs
             }
         }
-
-
         private async Task ImportGenesAsync(string filePath)
         {
             var lines = File.ReadAllLines(filePath).Skip(1); // skip header
@@ -71,74 +69,6 @@ namespace Backend.Services
 
            await _bioDbContextcontext.SaveChangesAsync();
         }
-        //private async Task ImportDiseasesAsync(string filePath)
-        //{
-        //    var diseaseLines = File.ReadAllLines(filePath).Skip(1);
-
-        //    foreach (var line in diseaseLines)
-        //    {
-        //        var cols = line.Split(',');
-
-        //        var disease = new Disease
-        //        {
-        //            DiseaseID = cols[0],
-        //            DiseaseName = cols[1],
-        //            Description = cols[2]
-        //        };
-
-        //        // Parse gene IDs: [G1,G2]
-        //        var geneIds = cols[3].Trim('[', ']').Split(',', StringSplitOptions.RemoveEmptyEntries);
-
-        //        foreach (var gId in geneIds)
-        //        {
-        //            var gene = await _bioDbContextcontext.Genes.FirstOrDefaultAsync(x => x.GeneID == gId.Trim());
-
-        //            if (gene != null)
-        //            {
-        //                disease.RelatedGenes.Add(gene); // EF will populate hidden join table automatically
-        //            }
-        //        }
-
-        //        _bioDbContextcontext.Diseases.Add(disease);
-        //    }
-
-        //    await _bioDbContextcontext.SaveChangesAsync();
-
-        //}
-        //private async Task ImportDrugsAsync(string filePath)
-        //{
-        //    var lines = File.ReadAllLines(filePath).Skip(1); // skip header
-
-        //    foreach (var line in lines)
-        //    {
-        //        var cols = line.Split(',');
-
-        //        var drug = new Drug
-        //        {
-        //            DrugId = cols[0],
-        //            DrugName = cols[1],
-        //        };
-
-        //        // Parse gene IDs: [G1,G2]
-        //        var geneIds = cols[2].Trim('[', ']').Split(',', StringSplitOptions.RemoveEmptyEntries);
-
-        //        foreach (var gId in geneIds)
-        //        {
-        //            var gene = await _bioDbContextcontext.Genes.FirstOrDefaultAsync(x => x.GeneID == gId.Trim());
-
-        //            if (gene != null)
-        //            {
-        //                drug.TargetGenes.Add(gene); // EF will populate hidden join table automatically
-        //            }
-        //        }
-
-        //        _bioDbContextcontext.Drugs.Add(drug);
-        //    }
-
-        //    await _bioDbContextcontext.SaveChangesAsync();
-
-        //}
-
         private async Task ImportDiseasesAsync(string filePath)
         {
             var diseaseLines = File.ReadAllLines(filePath).Skip(1); // skip header
