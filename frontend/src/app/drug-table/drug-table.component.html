@@ -20,12 +20,13 @@
   </div>
 
   <div *ngIf="!isLoading && !errorMessage" class="table-wrapper">
+  
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
-      <ng-container matColumnDef="DrugId">
+      <ng-container matColumnDef="DrugID">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Drug ID</th>
         <td mat-cell *matCellDef="let drug" (click)="onSelectDrug(drug)">
-          {{ drug.DrugId }}
+          {{ drug.DrugID }}
         </td>
       </ng-container>
 
@@ -46,7 +47,7 @@
   <mat-card *ngIf="selectedDrug" class="detail-panel">
     <mat-card-header>
       <mat-card-title>{{ selectedDrug.DrugName }}</mat-card-title>
-      <mat-card-subtitle>ID: {{ selectedDrug.DrugId }}</mat-card-subtitle>
+      <mat-card-subtitle>ID: {{ selectedDrug.DrugID }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <div *ngIf="selectedDrug.TargetedGenes?.length">
@@ -54,6 +55,14 @@
         <ul>
           <li *ngFor="let gene of selectedDrug.TargetedGenes">
             {{ gene.GeneName }} ({{ gene.GeneID }})
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="selectedDrug.DrugGenes?.length">
+        <strong>Targeted Genes:</strong>
+        <ul>
+          <li *ngFor="let dg of selectedDrug.DrugGenes">
+            {{ dg.GeneID }} ({{ dg.DrugID }}) Effect: ({{ dg.Effect }}) Approval Year:({{ dg.ApprovalYear }})
           </li>
         </ul>
       </div>

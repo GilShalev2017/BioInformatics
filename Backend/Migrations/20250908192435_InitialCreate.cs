@@ -31,7 +31,7 @@ namespace Backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DrugId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DrugID = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DrugName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -46,17 +46,11 @@ namespace Backend.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GeneID = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GeneName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DrugId = table.Column<int>(type: "int", nullable: true)
+                    GeneName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Genes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Genes_Drugs_DrugId",
-                        column: x => x.DrugId,
-                        principalTable: "Drugs",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -83,15 +77,39 @@ namespace Backend.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "DrugGene",
+                columns: table => new
+                {
+                    TargetGenesId = table.Column<int>(type: "int", nullable: false),
+                    TargetedByDrugsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DrugGene", x => new { x.TargetGenesId, x.TargetedByDrugsId });
+                    table.ForeignKey(
+                        name: "FK_DrugGene_Drugs_TargetedByDrugsId",
+                        column: x => x.TargetedByDrugsId,
+                        principalTable: "Drugs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DrugGene_Genes_TargetGenesId",
+                        column: x => x.TargetGenesId,
+                        principalTable: "Genes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_DiseaseGene_RelatedGenesId",
                 table: "DiseaseGene",
                 column: "RelatedGenesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Genes_DrugId",
-                table: "Genes",
-                column: "DrugId");
+                name: "IX_DrugGene_TargetedByDrugsId",
+                table: "DrugGene",
+                column: "TargetedByDrugsId");
         }
 
         /// <inheritdoc />
@@ -101,13 +119,16 @@ namespace Backend.Migrations
                 name: "DiseaseGene");
 
             migrationBuilder.DropTable(
+                name: "DrugGene");
+
+            migrationBuilder.DropTable(
                 name: "Diseases");
 
             migrationBuilder.DropTable(
-                name: "Genes");
+                name: "Drugs");
 
             migrationBuilder.DropTable(
-                name: "Drugs");
+                name: "Genes");
         }
     }
 }

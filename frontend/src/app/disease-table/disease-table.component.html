@@ -90,6 +90,16 @@
           </li>
         </ul>
       </div>
+
+      <div *ngIf="selectedDisease.DiseaseGenes?.length">
+        <strong>Related Genes:</strong>
+        <ul>
+          <li *ngFor="let gd of selectedDisease.DiseaseGenes">
+            ({{ gd.GeneID }}) {{gd.EvidenceType}} {{gd.Strength}}
+          </li>
+        </ul>
+      </div>
+
     </mat-card-content>
     <mat-card-actions>
       <button mat-button color="warn" (click)="clearSelection()">Close</button>

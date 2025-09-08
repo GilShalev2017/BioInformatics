@@ -140,7 +140,7 @@ namespace Backend.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error retrieving drug with ID {DrugId}", drugId);
+                _logger.LogError(ex, "Error retrieving drug with ID {DrugID}", drugId);
                 return StatusCode(500, "An error occurred while retrieving the drug");
             }
         }

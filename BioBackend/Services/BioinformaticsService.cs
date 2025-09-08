@@ -22,6 +22,8 @@ namespace BioBackend.Services
         Task<IEnumerable<Drug>> GetAllDrugsAsync();
         Task<IEnumerable<Drug>> SearchDrugsAsync(string query);
 
+        Task<Relationships> GetRelationships();
+
 
         // Association methods
         Task<IEnumerable<Gene>> GetGenesForDiseaseAsync(string diseaseId);
@@ -166,6 +168,29 @@ namespace BioBackend.Services
                 .ToListAsync();
 
             return drugs;
+        }
+
+        #endregion
+
+        #region Relationships
+        public async Task<Relationships> GetRelationships()
+        {
+            var genes = await _bioDbContext.Genes
+              .Include(g => g.DiseaseGenes)
+              .Include(g => g.DrugGenes)
+              .ToListAsync();
+
+            var diseases = await _bioDbContext.Diseases
+                .Include(d => d.DiseaseGenes)
+                .ToListAsync();
+
+            var drugs = await _bioDbContext.Drugs
+                .Include(dr => dr.DrugGenes)
+                .ToListAsync();
+
+            var relationships = new Relationships { Genes = genes, Diseases = diseases, Drugs = drugs };
+
+            return relationships;
         }
 
         #endregion

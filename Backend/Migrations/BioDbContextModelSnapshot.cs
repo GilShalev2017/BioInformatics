@@ -54,7 +54,7 @@ namespace Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("DrugId")
+                    b.Property<string>("DrugID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

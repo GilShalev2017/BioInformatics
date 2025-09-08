@@ -3,9 +3,7 @@
   <!-- Search input -->
   <mat-form-field appearance="outline" class="search-field">
     <mat-label>Search genes</mat-label>
-    <input matInput placeholder="ID or name..."
-           [value]="searchTerm"
-           (input)="onSearchChange($event)">
+    <input matInput placeholder="ID or name..." [value]="searchTerm" (input)="onSearchChange($event)">
   </mat-form-field>
 
   <!-- Loading state -->
@@ -68,7 +66,23 @@
         <strong>Targeted By Drugs:</strong>
         <ul>
           <li *ngFor="let drug of selectedGene.TargetedByDrugs">
-            {{ drug.DrugName }} ({{ drug.DrugId }})
+            {{ drug.DrugName }} ({{ drug.DrugID }})
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="selectedGene.DrugGenes?.length">
+        <strong>Targeted By Drugs:</strong>
+        <ul>
+          <li *ngFor="let dg of selectedGene.DrugGenes">
+            {{ dg.DrugID }} Effect: ({{ dg.Effect }}) Approval Year:({{ dg.ApprovalYear }})
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="selectedGene.DiseaseGenes?.length">
+        <strong>Disease Related:</strong>
+        <ul>
+          <li *ngFor="let dg of selectedGene.DiseaseGenes">
+            {{ dg.DiseaseID }} EvidenceType: ({{ dg.EvidenceType }}) Strength:({{ dg.Strength }})
           </li>
         </ul>
       </div>

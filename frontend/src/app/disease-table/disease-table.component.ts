@@ -94,6 +94,7 @@ export class DiseaseTableComponent implements OnInit, AfterViewInit {
 
   onSelectDisease(disease: Disease): void {
     this.selectedDisease = disease;
+    console.log( `SelectedDisease: ${this.selectedDisease}`);
   }
 
   clearSelection(): void {

@@ -142,7 +142,7 @@ namespace Backend.Services
             var drug = await _bioDbContext.Drugs
                 .Include(d => d.TargetGenes)
                 //.Include(d => d.RelatedDiseases)
-                .FirstOrDefaultAsync(d => d.DrugId == drugId);
+                .FirstOrDefaultAsync(d => d.DrugID == drugId);
 
             return drug;
         }
@@ -163,7 +163,7 @@ namespace Backend.Services
                // .Include(d => d.RelatedGenes)
                 .Include(d => d.TargetGenes)
                 .Where(d => d.DrugName.Contains(query) ||
-                           d.DrugId.Contains(query) )
+                           d.DrugID.Contains(query) )
                 .ToListAsync();
 
             return drugs;

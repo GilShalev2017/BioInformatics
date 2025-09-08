@@ -202,6 +202,23 @@ namespace BioBackend.Controllers
             }
         }
 
+        [HttpGet("relationships")]
+        public async Task<IActionResult> GetRelationships()
+        {
+            try
+            {
+                var relationships = await _bioinformaticsService.GetRelationships();
+
+                return Ok(relationships);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting relationships}");
+                return StatusCode(500, "An error occurred while getting relationships");
+            }
+        }
+
+
 
 
         [HttpGet("diseases/{diseaseId}/genes")]

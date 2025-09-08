@@ -137,7 +137,7 @@ namespace Backend.Services
 
                     var drug = new Drug
                     {
-                        DrugId = cols[0].Trim(),
+                        DrugID = cols[0].Trim(),
                         DrugName = cols[1].Trim(),
                     };
 

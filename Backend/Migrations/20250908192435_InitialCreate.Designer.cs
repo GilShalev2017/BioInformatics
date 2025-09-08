@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(BioDbContext))]
-    [Migration("20250904201426_AddDrugGeneRelation")]
-    partial class AddDrugGeneRelation
+    [Migration("20250908192435_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,7 +57,7 @@ namespace Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("DrugId")
+                    b.Property<string>("DrugID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

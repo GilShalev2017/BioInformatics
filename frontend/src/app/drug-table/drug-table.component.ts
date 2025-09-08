@@ -30,7 +30,8 @@ import { BioService } from '../services/bio.service';
   ]
 })
 export class DrugTableComponent implements OnInit {
-  displayedColumns: string[] = ['DrugId', 'DrugName'];
+  //displayedColumns: string[] = ['DrugId', 'DrugName'];
+  displayedColumns: string[] = ['DrugID', 'DrugName'];
   dataSource = new MatTableDataSource<Drug>([]);
 
   isLoading = false;
@@ -52,7 +53,7 @@ export class DrugTableComponent implements OnInit {
     this.loadDrugs();
 
     this.dataSource.filterPredicate = (data: Drug, filter: string) =>
-      data.DrugId.toLowerCase().includes(filter) ||
+      data.DrugID.toLowerCase().includes(filter) ||
       data.DrugName.toLowerCase().includes(filter);
   }
 
