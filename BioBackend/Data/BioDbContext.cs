@@ -22,7 +22,7 @@ namespace BioBackend.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<DiseaseGene>()
-      .HasKey(dg => new { dg.DiseaseID, dg.GeneID }); // composite PK
+                .HasKey(dg => new { dg.DiseaseID, dg.GeneID }); // composite PK
 
             modelBuilder.Entity<DiseaseGene>()
                 .HasOne(dg => dg.Disease)

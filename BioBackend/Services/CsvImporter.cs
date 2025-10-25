@@ -38,11 +38,17 @@ namespace BioBackend.Services
                 var drugGenesFilePath = @"C:\\Development\\Demo\\BioBackend\\DataFiles\\DrugGenes.csv";
                 var diseaseGeneaFilePath = @"C:\\Development\\Demo\\BioBackend\\DataFiles\\DiseaseGene.csv";
 
+                var geneAliasesFilePath = @"C:\\Development\\Demo\\BioBackend\\DataFiles\\gene_aliases.csv";
+                var geneDescriptionsFilePath = @"C:\\Development\\Demo\\BioBackend\\DataFiles\\gene_descriptions.json";
+
                 await ImportGenesAsync(genesFilePath);
                 await ImportDiseasesAsync(diseasesFilePath);
                 await ImportDrugsAsync(drugsFilePath);
                 await ImportDrugGenesAsync(drugGenesFilePath);
                 await ImportDiseaseGenesAsync(diseaseGeneaFilePath);
+
+                await ImportGeneAliasesCSV();
+                await ImportGeneDescriptionsJson();
             }
             catch (Exception ex)
             {
@@ -128,7 +134,7 @@ namespace BioBackend.Services
         private async Task ImportDiseasesAsync(string filePath)
         {
             var diseaseLines = File.ReadAllLines(filePath).Skip(1);
-           
+
             var seenIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase); // track duplicates in current file
 
             foreach (var line in diseaseLines)
@@ -324,7 +330,7 @@ namespace BioBackend.Services
         private async Task ImportDiseaseGenesAsync(string filePath)
         {
             var lines = File.ReadAllLines(filePath).Skip(1); // skip header
-          
+
             var seenIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var line in lines)
@@ -404,5 +410,57 @@ namespace BioBackend.Services
 
             await _bioDbContextcontext.SaveChangesAsync();
         }
+
+        private async Task ImportGeneAliasesCSV(string filePath)
+        {
+
+        }
+        private async Task ImportGeneDescriptionsJson(string filePath)
+        {
+
+        }
     }
 }
+
+
+//public class RemoteDataClient
+//{
+//    private readonly HttpClient _httpClient;
+
+//    public RemoteDataClient(HttpClient httpClient)
+//    {
+//        _httpClient = httpClient;
+//    }
+
+//    // Generic method to fetch data from any endpoint
+//    public async Task<IEnumerable<T>> GetEntitiesAsync<T>(string endpointUrl)
+//    {
+//        var result = await _httpClient.GetFromJsonAsync<IEnumerable<T>>(endpointUrl);
+//        return result ?? Enumerable.Empty<T>();
+//    }
+//}
+
+//var httpClient = new HttpClient();
+//var remoteClient = new RemoteDataClient(httpClient);
+
+//// Example: endpoints you’d be given in the exam
+//string genesUrl = "https://example.com/api/genes";
+//string diseasesUrl = "https://example.com/api/diseases";
+//string drugsUrl = "https://example.com/api/drugs";
+
+//var genes = await remoteClient.GetEntitiesAsync<Gene>(genesUrl);
+//var diseases = await remoteClient.GetEntitiesAsync<Disease>(diseasesUrl);
+//var drugs = await remoteClient.GetEntitiesAsync<Drug>(drugsUrl);
+
+//// Print to console
+//Console.WriteLine("Genes:");
+//foreach (var g in genes)
+//    Console.WriteLine($" - {g.GeneID}: {g.GeneName}");
+
+//Console.WriteLine("Diseases:");
+//foreach (var d in diseases)
+//    Console.WriteLine($" - {d.DiseaseID}: {d.DiseaseName}");
+
+//Console.WriteLine("Drugs:");
+//foreach (var dr in drugs)
+//    Console.WriteLine($" - {dr.DrugID}: {dr.DrugName}");
