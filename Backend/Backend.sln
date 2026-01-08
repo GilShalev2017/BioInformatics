@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend.csproj",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioBackend", "..\BioBackend\BioBackend.csproj", "{BADD7A6C-C787-4967-B5EF-C317E62DC051}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlyMaps", "..\FlyMaps\FlyMaps.csproj", "{07009BA3-80CB-48DA-A3C0-0A423E494E2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{BADD7A6C-C787-4967-B5EF-C317E62DC051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BADD7A6C-C787-4967-B5EF-C317E62DC051}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BADD7A6C-C787-4967-B5EF-C317E62DC051}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07009BA3-80CB-48DA-A3C0-0A423E494E2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07009BA3-80CB-48DA-A3C0-0A423E494E2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07009BA3-80CB-48DA-A3C0-0A423E494E2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07009BA3-80CB-48DA-A3C0-0A423E494E2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
