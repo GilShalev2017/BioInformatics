@@ -4,18 +4,23 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { Disease, Drug, Gene, Relationships } from '../models/models';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BioService {
+  
+  private readonly baseUrl = environment.apiBaseUrl;
+
   // Against Backend
   // private readonly baseBioApi = 'https://localhost:7025/api/Bioinformatics';
   // private readonly importApi = 'https://localhost:7025/api/ImportBioData';
   
   //Against BioBackend
-  private readonly baseBioApi = 'https://localhost:7266/api/Bioinformatics';
-  private readonly importApi = 'https://localhost:7266/api/ImportBioData';
+  private readonly baseBioApi = `${this.baseUrl}/Bioinformatics`;//'https://localhost:63681/api/Bioinformatics';
+  private readonly importApi = `${this.baseUrl}/ImportBioData`;//'https://localhost:63681/api/ImportBioData';
+
 
   constructor(private http: HttpClient) { }
 

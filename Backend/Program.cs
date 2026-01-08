@@ -1,3 +1,4 @@
+using Backend.Configuration;
 using Backend.Data;
 using Backend.Services;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,8 @@ builder.Services.AddScoped<ICsvImporter, CsvImporter>();
 builder.Services.AddScoped<IBioinformaticsService, BioinformaticsService>();
 builder.Services.AddScoped<IElasticService, ElasticService>();
 
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
 // Add CORS
 builder.Services.AddCors(options =>
 {
@@ -48,7 +51,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 

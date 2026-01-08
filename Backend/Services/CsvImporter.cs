@@ -1,6 +1,8 @@
-﻿using Backend.Data;
+﻿using Backend.Configuration;
+using Backend.Data;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 
 namespace Backend.Services
@@ -14,11 +16,13 @@ namespace Backend.Services
     {
         private readonly BioDbContext _bioDbContextcontext;
         private readonly IElasticService _elasticService;
+        private readonly string _dataFilesFolderPath;
 
-        public CsvImporter(BioDbContext bioDbContextcontext, IElasticService elasticService)
+        public CsvImporter(BioDbContext bioDbContextcontext, IElasticService elasticService, IOptions<AppSettings> options)
         {
             _bioDbContextcontext = bioDbContextcontext;
             _elasticService = elasticService;
+            _dataFilesFolderPath = options.Value.DataFilesFolderPath;
         }
         private async Task CleanTables()
         {
@@ -35,9 +39,9 @@ namespace Backend.Services
             {
                 await CleanTables();
 
-                var genesFilePath = @"C:\\Development\\Demo\\Backend\\DataFiles\\Genes.csv";
-                var diseasesFilePath = @"C:\\Development\\Demo\\Backend\\DataFiles\\Diseases.csv";
-                var drugsFilePath = @"C:\\Development\\Demo\\Backend\\DataFiles\\Drugs.csv";
+                var genesFilePath = $"{_dataFilesFolderPath}\\Genes.csv";// @"C:\\Development\\Demo\\Backend\\DataFiles\\Genes.csv";
+                var diseasesFilePath = $"{_dataFilesFolderPath}\\Diseases.csv";// @"C:\\Development\\Demo\\Backend\\DataFiles\\Diseases.csv";
+                var drugsFilePath = $"{_dataFilesFolderPath}\\Drugs.csv"; ;// @"C:\\Development\\Demo\\Backend\\DataFiles\\Drugs.csv";
 
                 await ImportGenesAsync(genesFilePath);
                 await ImportDiseasesAsync(diseasesFilePath);
