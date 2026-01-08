@@ -2,7 +2,12 @@
 using FlyMaps.Controllers;
 using FlyMaps.Data;
 using FlyMaps.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json;
+using System.Xml.Linq;
 
 namespace FlyMaps.Services
 {
@@ -26,41 +31,94 @@ namespace FlyMaps.Services
             _logger = logger;
         }
 
+        private async Task<Dictionary<string, GeneSummariesModel>> LoadSummariesAsync()
+        {
+            if (!File.Exists(_geneSummariesPath!))
+                return new();
+
+            var jsonString = await File.ReadAllTextAsync(_geneSummariesPath);
+
+            if (string.IsNullOrWhiteSpace(jsonString))
+                return new();
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            // Deserialize directly to dictionary
+            var result = JsonSerializer.Deserialize<Dictionary<string, GeneSummariesModel>>(jsonString, options) ?? new();
+
+            return result;
+        }
+
         public async Task ImportDataAsync()
         {
             try
             {
-                var lines = File.ReadAllLines(_geneAliasesPath!).Skip(10);
+                Dictionary<string, GeneSummariesModel> summariesDic = await LoadSummariesAsync();
+
+                var genes = await _bioDataDbContext.Genes
+                                    .Include(g => g.Aliases)
+                                    .Include(g => g.DbLinks)
+                                    .Include(g => g.Summaries)
+                                    .ToListAsync();
+
+                var geneDict = genes.ToDictionary(g => g.Symbol);
+
+                var lines = File.ReadLines(_geneAliasesPath).Skip(10);
 
                 foreach (var line in lines)
                 {
-                    var splits = line.Split(',');
-
-                    if(splits.Length != 4)
-                    {
+                    var parts = line.Split(',');
+                    if (parts.Length != 4)
                         continue;
-                    }
 
-                    var symbol = splits[0];
-                    var alias = splits[1];
-                    var sourceDbId = splits[2];
-                    var sourceDb = splits[3];
-                    var newDbLink = new DbLink() { SourceDb = sourceDb, SourceDbId = sourceDbId };
-                    var newGene = new Gene { Symbol = symbol, Aliases = new List<string> { alias }, DbLinks = new List<DbLink> { newDbLink } };
+                    var symbol = parts[0].Trim();
+                    var alias = parts[1].Trim();
+                    var sourceDbId = parts[2].Trim();
+                    var sourceDb = parts[3].Trim();
 
-                    var foundGene = _bioDataDbContext.Genes.FirstOrDefault(gene => gene.Symbol == symbol);
-                    if (foundGene == null)
+                    if (!geneDict.TryGetValue(symbol, out var gene))
                     {
-                        _bioDataDbContext.Genes.Add(newGene);
-                    }
-                    else //Gene already exist
-                    {
-                        foundGene.Aliases.Add(alias);
-                        var foundDbLink = foundGene.DbLinks.FirstOrDefault(dbLink => dbLink.SourceDb == sourceDb);
-                        if(foundDbLink == null)
+                        gene = new Gene { Symbol = symbol };
+                       
+                        geneDict[symbol] = gene;
+                        
+                        _bioDataDbContext.Genes.Add(gene);
+
+                        // Add summaries once per gene
+                        if (summariesDic.TryGetValue(symbol, out var summariesModel))
                         {
-                            foundGene.DbLinks.Add(newDbLink);
+                            foreach (var summary in summariesModel.Summaries)
+                            {
+                                gene.Summaries.Add(new GeneSummary
+                                {
+                                    Summary = summary.Summary,
+                                    Source = summary.Source
+                                });
+                            }
                         }
+                    }
+
+                    // Alias (unique per gene + alias + source)
+                    if (!gene.Aliases.Any(a => a.Alias == alias && a.Source == sourceDb))
+                    {
+                        gene.Aliases.Add(new GeneAlias
+                        {
+                            Alias = alias,
+                            Source = sourceDb
+                        });
+                    }
+
+                    // DbLink (unique per gene + source)
+                    if (!gene.DbLinks.Any(d => d.SourceDb == sourceDb))
+                    {
+                        gene.DbLinks.Add(new DbLink
+                        {
+                            SourceDb = sourceDb,
+                            SourceDbId = sourceDbId
+                        });
                     }
                 }
 
@@ -68,8 +126,8 @@ namespace FlyMaps.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Import Data failed: {ex.Message}");
-                throw; // rethrow so you still see it in ASP.NET logs
+                _logger.LogError(ex, "Import failed");
+                throw;
             }
         }
     }

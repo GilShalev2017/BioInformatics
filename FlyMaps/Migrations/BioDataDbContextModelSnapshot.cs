@@ -29,12 +29,12 @@ namespace FlyMaps.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("GeneId")
+                    b.Property<int>("GeneId")
                         .HasColumnType("int");
 
                     b.Property<string>("SourceDb")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SourceDbId")
                         .IsRequired()
@@ -42,9 +42,10 @@ namespace FlyMaps.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GeneId");
+                    b.HasIndex("GeneId", "SourceDb")
+                        .IsUnique();
 
-                    b.ToTable("DbLink");
+                    b.ToTable("DbLinks");
                 });
 
             modelBuilder.Entity("FlyMaps.Models.Gene", b =>
@@ -55,17 +56,43 @@ namespace FlyMaps.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.PrimitiveCollection<string>("Aliases")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Symbol")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Symbol")
+                        .IsUnique();
+
                     b.ToTable("Genes");
+                });
+
+            modelBuilder.Entity("FlyMaps.Models.GeneAlias", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Alias")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("GeneId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GeneId", "Alias", "Source")
+                        .IsUnique();
+
+                    b.ToTable("GeneAliases");
                 });
 
             modelBuilder.Entity("FlyMaps.Models.GeneSummary", b =>
@@ -76,7 +103,7 @@ namespace FlyMaps.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("GeneId")
+                    b.Property<int>("GeneId")
                         .HasColumnType("int");
 
                     b.Property<string>("Source")
@@ -91,25 +118,46 @@ namespace FlyMaps.Migrations
 
                     b.HasIndex("GeneId");
 
-                    b.ToTable("GeneSummary");
+                    b.ToTable("GeneSummaries");
                 });
 
             modelBuilder.Entity("FlyMaps.Models.DbLink", b =>
                 {
-                    b.HasOne("FlyMaps.Models.Gene", null)
+                    b.HasOne("FlyMaps.Models.Gene", "Gene")
                         .WithMany("DbLinks")
-                        .HasForeignKey("GeneId");
+                        .HasForeignKey("GeneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Gene");
+                });
+
+            modelBuilder.Entity("FlyMaps.Models.GeneAlias", b =>
+                {
+                    b.HasOne("FlyMaps.Models.Gene", "Gene")
+                        .WithMany("Aliases")
+                        .HasForeignKey("GeneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Gene");
                 });
 
             modelBuilder.Entity("FlyMaps.Models.GeneSummary", b =>
                 {
-                    b.HasOne("FlyMaps.Models.Gene", null)
+                    b.HasOne("FlyMaps.Models.Gene", "Gene")
                         .WithMany("Summaries")
-                        .HasForeignKey("GeneId");
+                        .HasForeignKey("GeneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Gene");
                 });
 
             modelBuilder.Entity("FlyMaps.Models.Gene", b =>
                 {
+                    b.Navigation("Aliases");
+
                     b.Navigation("DbLinks");
 
                     b.Navigation("Summaries");
