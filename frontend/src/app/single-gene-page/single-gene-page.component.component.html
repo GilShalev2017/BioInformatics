@@ -1,0 +1,57 @@
+<div class="container">
+  <div style="display: flex; gap: 10px; justify-content: space-between">
+    <input
+      matinput
+      type="text"
+      placeholder="Search gene..."
+      [(ngModel)]="searchText"
+      (ngModelChange)="onSearchChange($event)"
+    />
+
+    <button mat-raised-button color="primary" (click)="loadData()">
+      Load Data
+    </button>
+
+    <div class="spinner" *ngIf="isLoading">
+      <mat-spinner diameter="30"></mat-spinner>
+    </div>
+  </div>
+
+  <!-- Search Results -->
+  <ul *ngIf="searchResults.length" class="search-results">
+    <li
+      *ngFor="let g of searchResults"
+      (click)="selectGene(g.Symbol)"
+      class="search-item"
+      [ngClass]="{ selected: g.Symbol === selectedGene?.Symbol }"
+    >
+      <strong>{{ g.Symbol }}</strong>
+      <span *ngIf="g.Aliases.length"> — {{ g.Aliases[0].Alias }} </span>
+    </li>
+  </ul>
+
+  <!-- Gene Details -->
+  <div *ngIf="selectedGene">
+    <h1>{{ selectedGene.Symbol }}</h1>
+    <h2>Descriptions</h2>
+    <div *ngFor="let s of selectedGene.Summaries">
+      <b>{{ s.Source }}</b> – {{ s.Summary }}
+    </div>
+    <h2>Aliases</h2>
+    <ul>
+      <li *ngFor="let a of selectedGene.Aliases">
+        {{ a.Alias }}
+        <sup>({{ a.Source }})</sup>
+      </li>
+    </ul>
+    <h2>External Links</h2>
+    <ul>
+      <li *ngFor="let d of selectedGene.DbLinks">
+        {{ d.SourceDb }}:
+        <a [href]="buildUrl(d)" target="_blank">
+          {{ d.SourceDbId }}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -6,8 +6,14 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers();
-
+builder.Services.AddControllers()
+ .AddJsonOptions(options =>
+  {
+      options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+      options.JsonSerializerOptions.WriteIndented = true;
+      options.JsonSerializerOptions.MaxDepth = 64; // Optional: increase max depth
+      options.JsonSerializerOptions.PropertyNamingPolicy = null;
+  });
 
 //Swagger
 builder.Services.AddEndpointsApiExplorer();

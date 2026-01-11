@@ -1,0 +1,12 @@
+.container {
+  padding: 40px;
+}
+
+.search-item.selected {
+  background-color: #e3f2fd;
+}
+
+sup {
+  vertical-align: baseline;
+  // font-size: inherit; /* Optional: makes it the same size as regular text */
+}
