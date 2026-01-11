@@ -6,6 +6,7 @@ using FlyMaps.Data;
 using FlyMaps.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
 using System.Formats.Asn1;
 using System.Globalization;
 using System.Linq;
@@ -58,8 +59,14 @@ namespace FlyMaps.Services
 
         public async Task ImportDataAsync()
         {
+            Stopwatch sw = Stopwatch.StartNew();
+
             try
             {
+                //Optimization - save in batches of 1000 / xxx itmes
+                const int batchSize = 1000;
+                int processed = 0;
+
                 var summariesDic = await LoadSummariesAsync();
 
                 var genes = await _bioDataDbContext.Genes
@@ -68,6 +75,7 @@ namespace FlyMaps.Services
                     .Include(g => g.Summaries)
                     .ToListAsync();
 
+                //Optimization - Case-insensitive symbol matching (VERY important)
                 var geneDict = genes.ToDictionary(g => g.Symbol, StringComparer.OrdinalIgnoreCase);
 
                 using var reader = new StreamReader(_geneAliasesPath);
@@ -93,18 +101,21 @@ namespace FlyMaps.Services
                     if (string.IsNullOrWhiteSpace(record.Symbol))
                         continue;
 
-                    var symbol = record.Symbol.Trim();
+                    processed++;
+
+                    //Optimization - Normalized Symbol!
+                    var normalizedSymbol = record.Symbol.Trim().ToUpperInvariant();
                     var alias = record.Alias?.Trim();
                     var sourceDb = record.SourceDb?.Trim();
                     var sourceDbId = record.SourceDbId?.Trim();
 
-                    if (!geneDict.TryGetValue(symbol, out var gene))
+                    if (!geneDict.TryGetValue(normalizedSymbol, out var gene))
                     {
-                        gene = new Gene { Symbol = symbol };
-                        geneDict[symbol] = gene;
+                        gene = new Gene { Symbol = normalizedSymbol };
+                        geneDict[normalizedSymbol] = gene;
                         _bioDataDbContext.Genes.Add(gene);
 
-                        if (summariesDic.TryGetValue(symbol, out var summariesModel))
+                        if (summariesDic.TryGetValue(normalizedSymbol, out var summariesModel))
                         {
                             foreach (var summary in summariesModel.Summaries)
                             {
@@ -136,6 +147,12 @@ namespace FlyMaps.Services
                             SourceDbId = sourceDbId!
                         });
                     }
+
+                    //Optimization - Batch Save
+                    if (processed % batchSize == 0)
+                    {
+                        await _bioDataDbContext.SaveChangesAsync();
+                    }
                 }
 
                 await _bioDataDbContext.SaveChangesAsync();
@@ -145,6 +162,9 @@ namespace FlyMaps.Services
                 _logger.LogError(ex, "Import failed");
                 throw;
             }
+
+            sw.Stop();
+            Console.WriteLine($"Elasped {sw.ElapsedMilliseconds} ms");
         }
 
         //public async Task OldImportDataAsync()

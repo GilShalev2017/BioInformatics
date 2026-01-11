@@ -16,6 +16,7 @@ namespace FlyMaps.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //The indexes assure Unique constraints in the DB! no duplications and quick searches
             modelBuilder.Entity<Gene>()
                 .HasIndex(g => g.Symbol)
                 .IsUnique();
